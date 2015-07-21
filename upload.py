@@ -1,6 +1,10 @@
 import requests
 import json
+import sqlite3
 from sys import argv
+
+conn = sqlite3.connect('/home/spatz/.uploader.db')
+
 
 script, auth = argv
 r = requests.get("https://api.vimeo.com/me", headers={"Authorization": "bearer %s" % auth } )
