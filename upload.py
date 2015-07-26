@@ -2,7 +2,6 @@ import requests
 import json
 import sqlite3
 import readline
-from sys import argv
 
 def databaseConnection():
   conn = sqlite3.connect('/home/spatz/.uploader.db')
@@ -13,15 +12,29 @@ def insertAuth(d):
   print "In the insert"
   #TODO Insert Logic
 
+def getAuth(name):
+  #SELECT and/or INSERT not working correctly 
+  z = databaseConnection()
+  z.execute('SELECT id FROM auths WHERE vimeo_username=?', (name,))
+  if z.fetchone() != None:  
+    print z.fetchone()
+  else:
+    z.execute('INSERT INTO auths VALUES(NULL,?)', (name,))
+    print "Inserting and then printing"
+
+
 def main():
   ''' Change the command line to an user input section.  Only 
   display that question if a SELECT of the table is empty
   '''
+  name = raw_input("Enter Your Vimeo Username: ")
+
+  getAuth(name)
+
   auth_token = raw_input('Enter your auth token: ')
-  
+   
   d = databaseConnection() 
   insertAuth(d)
-  script, auth = argv
   r = requests.get("https://api.vimeo.com/me", headers={"Authorization": "bearer %s" % auth_token } )
   parsed_json = json.loads(r.text)
 
