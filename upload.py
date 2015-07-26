@@ -1,6 +1,7 @@
 import requests
 import json
 import sqlite3
+import readline
 from sys import argv
 
 def databaseConnection():
@@ -15,11 +16,13 @@ def insertAuth(d):
 def main():
   ''' Change the command line to an user input section.  Only 
   display that question if a SELECT of the table is empty
-  '''  
+  '''
+  auth_token = raw_input('Enter your auth token: ')
+  
   d = databaseConnection() 
   insertAuth(d)
   script, auth = argv
-  r = requests.get("https://api.vimeo.com/me", headers={"Authorization": "bearer %s" % auth } )
+  r = requests.get("https://api.vimeo.com/me", headers={"Authorization": "bearer %s" % auth_token } )
   parsed_json = json.loads(r.text)
 
 
